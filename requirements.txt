@@ -1,0 +1,19 @@
+
+livekit-agents[tavus]>=1.5.1
+livekit-plugins-openai>=1.5.1
+livekit-plugins-silero>=1.5.1
+livekit-plugins-turn-detector>=1.5.1
+livekit-plugins-elevenlabs>=0.3.0
+livekit-plugins-avatario>=1.5.1
+
+
+# Utilities & MCP
+python-dotenv
+requests
+tzdata
+pydantic-ai-slim[openai,mcp]
+
+# Web Server
+flask[async]
+flask
+flask-cors
