@@ -16,8 +16,8 @@
     "livekit-plugins-turn-detector>=1.5.1",
     "livekit-plugins-elevenlabs>=0.3.0",
     "livekit-plugins-avatario>=1.5.1",
-    "livekit-plugins-deepgram>=0.6.0",    # <--- ADD THIS
-    "livekit-plugins-cartesia>=0.6.0",    # <--- ADD THIS
+    "livekit-plugins-deepgram>=0.6.0",
+    "livekit-plugins-cartesia>=0.6.0",
     "python-dotenv",
     "requests",
     "tzdata",
@@ -25,7 +25,20 @@
     "flask[async]",
     "flask-cors",
     "torch",
+    "torchvision",
 ]
+
+# --- ADD THIS SECTION BELOW TO FIX THE 12GB ERROR ---
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+
 
     [dependency-groups]
     dev = [
