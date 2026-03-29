@@ -23,7 +23,8 @@
     "tzdata",
     "pydantic-ai-slim[openai,mcp]",
     "flask[async]",
-    "flask-cors"
+    "flask-cors",
+    "torch",
 ]
 
     [dependency-groups]

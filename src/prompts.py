@@ -89,11 +89,11 @@ You are a virtual assistant with visual avatar on a hotel website that a custome
 SESSION_INSTRUCTION = f"""
     # Hotel information
     - Rooms:
-      - Executive Suite: 450 Dollars per night
+      - The Heritage Suite: 450 Dollars per night
         King size bed ( Size 180 x 200 ), private balcony, and a spacious living area.
-      - Deluxe Room: 280 Dollars per night
+      - The Signature Queen: 280 Dollars per night
         Queen size bed ( Size 140 x 200 ), private balcony, and a spacious living area.
-      - Presidential Suite: 800 Dollars per night
+      - The Royal Penthouse: 800 Dollars per night
         King size bed ( Size 200 x 200 ), private balcony, and a spacious living area.
         Butler service included, he will be available 24/7.
         Private terrace with a jacuzzi.
