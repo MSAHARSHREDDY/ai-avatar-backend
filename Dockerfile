@@ -1,3 +1,5 @@
+# This is an example Dockerfile that builds a minimal container for running LK Agents
+# For more information on the build process, see https://docs.livekit.io/agents/ops/deployment/builds/
 # syntax=docker/dockerfile:1
 
 # Use the official UV Python base image with Python 3.13 on Debian Bookworm
@@ -10,9 +12,16 @@ FROM ghcr.io/astral-sh/uv:python${PYTHON_VERSION}-bookworm-slim AS base
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-# --- Build stage ---
-# Install dependencies, build native extensions, and prepare the application
-FROM base AS build
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/app" \
+    --shell "/sbin/nologin" \
+    --uid "${UID}" \
+    appuser
 
 # Install build dependencies required for Python packages with native extensions
 # gcc: C compiler needed for building Python packages with C extensions
@@ -39,42 +48,25 @@ RUN mkdir -p src
 # Ensure your uv.lock file is checked in for consistency across environments
 RUN uv sync --locked
 
-# Copy all remaining application files into the container
+# Copy all remaining pplication files into the container
 # This includes source code, configuration files, and dependency specifications
 # (Excludes files specified in .dockerignore)
 COPY . .
 
-# Pre-download any ML models or files the agent needs
-# This ensures the container is ready to run immediately without downloading
-# dependencies at runtime, which improves startup time and reliability
-#RUN uv run "src/agent.py" download-files
-
-# --- Production stage ---
-# Build tools (gcc, g++, python3-dev) are not included in the final image
-FROM base
-
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/build/building/best-practices/#user
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/app" \
-    --shell "/sbin/nologin" \
-    --uid "${UID}" \
-    appuser
-
-# Copy the application and virtual environment with correct ownership in a single layer
-# This avoids expensive recursive chown and excludes build tools from the final image
-COPY --from=build --chown=appuser:appuser /app /app
-
-WORKDIR /app
+# Change ownership of all app files to the non-privileged user
+# This ensures the application can read/write files as needed
+RUN chown -R appuser:appuser /app
 
 # Switch to the non-privileged user for all subsequent operations
 # This improves security by not running as root
 USER appuser
 
-# Run the AgentServer using UV
+# Pre-download any ML models or files the agent needs
+# This ensures the container is ready to run immediately without downloading
+# dependencies at runtime, which improves startup time and reliability
+RUN uv run "src/agent.py" download-files
+
+# Run the application using UV
 # UV will activate the virtual environment and run the agent.
-# The "start" command tells the AgentServer to connect to LiveKit and begin waiting for jobs.
+# The "start" command tells the worker to connect to LiveKit and begin waiting for jobs.
 CMD ["uv", "run", "src/agent.py", "start"]

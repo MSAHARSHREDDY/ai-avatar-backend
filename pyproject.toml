@@ -1,44 +1,56 @@
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+    [build-system]
+    requires = ["setuptools>=61.0", "wheel"]
+    build-backend = "setuptools.build_meta"
 
-[project]
-name = "agent-starter-python"
-version = "1.0.0"
-description = "Simple voice AI assistant built with LiveKit Agents for Python"
-requires-python = ">=3.10, <3.15"
+    [project]
+    name = "agent-starter-python"
+    version = "1.0.0"
+    description = "Simple voice AI assistant built with LiveKit Agents for Python"
+    requires-python = ">=3.10, <3.15"
 
-dependencies = [
-    "livekit-agents[silero,turn-detector]~=1.4",
-    "livekit-plugins-noise-cancellation~=0.2",
+    dependencies = [
+    "livekit-agents[silero,turn-detector,tavus]>=1.5.1",
+    "livekit-plugins-noise-cancellation>=0.2.0",
+    "livekit-plugins-openai>=1.5.1",
+    "livekit-plugins-silero>=1.5.1",
+    "livekit-plugins-turn-detector>=1.5.1",
+    "livekit-plugins-elevenlabs>=0.3.0",
+    "livekit-plugins-avatario>=1.5.1",
+    "livekit-plugins-deepgram>=0.6.0",    # <--- ADD THIS
+    "livekit-plugins-cartesia>=0.6.0",    # <--- ADD THIS
     "python-dotenv",
+    "requests",
+    "tzdata",
+    "pydantic-ai-slim[openai,mcp]",
+    "flask[async]",
+    "flask-cors"
 ]
 
-[dependency-groups]
-dev = [
-    "pytest",
-    "pytest-asyncio",
-    "ruff",
-]
+    [dependency-groups]
+    dev = [
+        "pytest",
+        "pytest-asyncio",
+        "ruff",
+    ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
+    [tool.setuptools.packages.find]
+    where = ["src"]
 
-[tool.setuptools.package-dir]
-"" = "src"
+    [tool.setuptools.package-dir]
+    "" = "src"
 
-[tool.pytest.ini_options]
-asyncio_mode = "auto"
-asyncio_default_fixture_loop_scope = "function"
+    [tool.pytest.ini_options]
+    asyncio_mode = "auto"
+    asyncio_default_fixture_loop_scope = "function"
 
-[tool.ruff]
-line-length = 88
-target-version = "py39"
+    [tool.ruff]
+    line-length = 88
+    target-version = "py39"
 
-[tool.ruff.lint]
-select = ["E", "F", "W", "I", "N", "B", "A", "C4", "UP", "SIM", "RUF"]
-ignore = ["E501"]  # Line too long (handled by formatter)
+    [tool.ruff.lint]
+    select = ["E", "F", "W", "I", "N", "B", "A", "C4", "UP", "SIM", "RUF"]
+    ignore = ["E501"]  # Line too long (handled by formatter)
 
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
+    [tool.ruff.format]
+    quote-style = "double"
+    indent-style = "space"
